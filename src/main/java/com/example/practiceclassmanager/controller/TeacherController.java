@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/teachers")
+@RequestMapping({"/teachers", "/teacher"})
 public class TeacherController {
 
     private final TeacherRepository teacherRepository;
@@ -28,5 +28,23 @@ public class TeacherController {
     public Teacher getTeacherById(@PathVariable Long id) {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id " + id));
+    }
+
+    @PostMapping
+    public Teacher createTeacher(@RequestBody Teacher teacher) {
+        return teacherRepository.save(teacher);
+    }
+
+    @PostMapping("/{id}")
+    public Teacher createTeacherWithId(@PathVariable Long id, @RequestBody Teacher teacherDetails) {
+        Teacher teacher = teacherRepository.findById(id)
+                .orElse(new Teacher());
+
+        teacher.setId(id);
+        teacher.setFirstName(teacherDetails.getFirstName());
+        teacher.setLastName(teacherDetails.getLastName());
+        teacher.setEmail(teacherDetails.getEmail());
+
+        return teacherRepository.save(teacher);
     }
 }

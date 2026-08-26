@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/students")
+@RequestMapping({"/students", "/student"})
 public class StudentController {
 
     private final StudentRepository studentRepository;
@@ -28,5 +28,23 @@ public class StudentController {
     public Student getStudentById(@PathVariable Long id) {
         return studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id " + id));
+    }
+
+    @PostMapping
+    public Student createStudent(@RequestBody Student student) {
+        return studentRepository.save(student);
+    }
+
+    @PostMapping("/{id}")
+    public Student createStudentWithId(@PathVariable Long id, @RequestBody Student studentDetails) {
+        Student student = studentRepository.findById(id)
+                .orElse(new Student());
+
+        student.setId(id);
+        student.setFirstName(studentDetails.getFirstName());
+        student.setLastName(studentDetails.getLastName());
+        student.setEmail(studentDetails.getEmail());
+
+        return studentRepository.save(student);
     }
 }
