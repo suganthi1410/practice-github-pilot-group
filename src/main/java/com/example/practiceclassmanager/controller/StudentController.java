@@ -46,4 +46,11 @@ public class StudentController {
 
         return studentRepository.save(student);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteStudent(@PathVariable Long id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id " + id));
+        studentRepository.delete(student);
+    }
 }
