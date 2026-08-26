@@ -35,12 +35,11 @@ public class StudentController {
         return studentRepository.save(student);
     }
 
-    @PostMapping("/{id}")
-    public Student createStudentWithId(@PathVariable Long id, @RequestBody Student studentDetails) {
+    @PutMapping("/{id}")
+    public Student updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
         Student student = studentRepository.findById(id)
-                .orElse(new Student());
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id " + id));
 
-        student.setId(id);
         student.setFirstName(studentDetails.getFirstName());
         student.setLastName(studentDetails.getLastName());
         student.setEmail(studentDetails.getEmail());

@@ -35,12 +35,11 @@ public class TeacherController {
         return teacherRepository.save(teacher);
     }
 
-    @PostMapping("/{id}")
-    public Teacher createTeacherWithId(@PathVariable Long id, @RequestBody Teacher teacherDetails) {
+    @PutMapping("/{id}")
+    public Teacher updateTeacher(@PathVariable Long id, @RequestBody Teacher teacherDetails) {
         Teacher teacher = teacherRepository.findById(id)
-                .orElse(new Teacher());
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id " + id));
 
-        teacher.setId(id);
         teacher.setFirstName(teacherDetails.getFirstName());
         teacher.setLastName(teacherDetails.getLastName());
         teacher.setEmail(teacherDetails.getEmail());
